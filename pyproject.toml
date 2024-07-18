@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mlops-poc"
+version = "0.1.0"
+description = "POC for MLOps Tools"
+authors = ["Lokesh Mohanty <me.lokeshmohanty@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+clearml = "^1.16.2"
+scikit-learn = "^1.5.1"
+numpy = "^2.0.0"
+clearml-agent = "^1.8.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

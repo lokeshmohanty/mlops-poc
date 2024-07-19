@@ -1,3 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
 
 def plot_decision_boundary(model, X, y, alpha=1.0):
     axes=[-1.5, 2.4, -1, 1.5]

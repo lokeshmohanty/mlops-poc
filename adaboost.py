@@ -1,7 +1,7 @@
 from clearml import Task
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import DecisionTreeClassifier, AdaBoostClassifier
 from sklearn.metrics import accuracy_score
 
 from utils import plot_decision_boundary

@@ -25,3 +25,5 @@ def plot_decision_boundary(model, X, y, alpha=1.0):
     plt.axis(axes)
     plt.xlabel(r"$x_1$")
     plt.ylabel(r"$x_2$", rotation=0)
+    plt.title(model.__class__.__name__)
+    plt.show()

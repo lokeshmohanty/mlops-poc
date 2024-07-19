@@ -4,6 +4,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
+from utils import plot_decision_boundary
+
 # Initialize the task
 task = Task.init(project_name="Synthetic Classification", task_name="Random Forest Classifier")
 
@@ -23,6 +25,8 @@ y_pred = model.predict(X_test)
 
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
+
+plot_decision_boundary(model, X_train, y_train)
 
 # Log the results
 task.logger.report_scalar("Performance", "Accuracy", value=accuracy, iteration=0)

@@ -1,20 +1,16 @@
 from clearml import Task
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import DecisionTreeClassifier, AdaBoostClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
-from utils import plot_decision_boundary
+from utils import get_data, plot_decision_boundary
 
 # Initialize the task
 task = Task.init(project_name="Synthetic Classification", task_name="AdaBoost Classifier")
 
-# Generate some dummy data
-X = np.random.rand(1000, 10)
-y = np.random.randint(0, 2, 1000)
-
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Get the data
+X_train, X_test, y_train, y_test = get_data()
 
 # Create and train the model
 model = AdaBoostClassifier(
@@ -34,7 +30,7 @@ plot_decision_boundary(model, X_train, y_train)
 task.logger.report_scalar("Performance", "Accuracy", value=accuracy, iteration=0)
 
 # Log hyperparameters
-task.connect({"n_estimators": 100, "random_state": 42})
+task.connect({"n_estimators": 100, "learning_rate": 0.5, "random_state": 42})
 
 print(f"Accuracy: {accuracy}")
 

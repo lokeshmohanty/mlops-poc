@@ -12,9 +12,10 @@ task = Task.init(project_name="Synthetic Classification", task_name="Neural Clas
 # Get the data
 X_train, X_test, y_train, y_test = get_data()
 
-# Generate the dataset
-X = torch.FloatTensor(X)
-y = torch.FloatTensor(y).unsqueeze(1)
+X_train = torch.FloatTensor(X_train)
+X_test = torch.FloatTensor(X_test)
+y_train = torch.FloatTensor(y_train).unsqueeze(1)
+y_test = torch.FloatTensor(y_test).unsqueeze(1)
 
 # Define the neural network
 class NeuralNet(nn.Module):
@@ -32,13 +33,17 @@ class NeuralNet(nn.Module):
         x = self.sigmoid(self.fc3(x))
         return x
 
+    def predict(self, x):
+        x = self.forward(torch.FloatTensor(x))
+        return x.detach().numpy()
+
 # Initialize the model, loss function, and optimizer
 model = NeuralNet()
 criterion = nn.BCELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 
 # Training loop
-num_epochs = 1000
+num_epochs = 100 #0
 batch_size = 32
 
 for epoch in range(num_epochs):
@@ -54,9 +59,15 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
+        task.logger.report_scalar("Performance",
+                                  "Loss",
+                                  value=loss.item(),
+                                  iteration=i)
     
     if (epoch + 1) % 100 == 0:
         print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+
 
 # Evaluation
 model.eval()
@@ -69,10 +80,16 @@ with torch.no_grad():
     print(f'Test Loss: {test_loss.item():.4f}')
     print(f'Test Accuracy: {accuracy.item():.4f}')
 
-plot_decision_boundary(model, X_train, y_train)
+    task.logger.report_scalar("Performance",
+                              "Accuracy",
+                              value=accuracy.item(),
+                              iteration=i)
 
+plot_decision_boundary(model,
+                       X_train.detach().numpy(),
+                       y_train.detach().numpy().reshape(-1))
 # Log hyperparameters
 task.connect({"num_epochs": 1000, "learning_rate": 0.01})
 
 # Save the model
-# task.upload_artifact("model", model)
+task.upload_artifact("model", model)
